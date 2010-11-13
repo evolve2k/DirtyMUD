@@ -15,13 +15,13 @@ module Dirtymud
       player.room = self
       players.push(player)
       # annoucne to other players that they've entered the room
-      announce("#{player.name} has entered the room.", :except => player)
+      announce("#{player.name} has entered the room.", :except => [player])
     end
 
     def leave(player)
       players.delete(player)
       # annoucne to other players that they've left the room
-      announce("#{player.name} has left the room.", :except => player)
+      announce("#{player.name} has left the room.", :except => [player])
     end
 
     def announce(message, options = {})

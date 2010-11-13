@@ -34,7 +34,6 @@ describe Dirtymud::Player do
     end
 
     describe '#go' do
-
       it 'should make an announcement on the server' do
         @player.room = @room_center
         @room_n.should_receive(:announce).with("Dirk has entered the room.", :except => [ @player ])

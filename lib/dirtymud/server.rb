@@ -25,7 +25,7 @@ module Dirtymud
     def announce(message, options = {})
       players = options.has_key?(:only) ? [*options[:only]] : @players_by_connection.values
       players.each do |player|
-        if !options[:except] || (options[:except] && player != options[:except])
+        if !options[:except] || (options[:except] && !options[:except].include?(player))
           player.connection.send_data("#{message}\n")
         end
       end

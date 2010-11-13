@@ -54,7 +54,7 @@ describe Dirtymud::Server do
       it 'should allow you to ignore certain players' do
         @connection1.should_not_receive(:send_data).with("This is very important\n")
         @connection2.should_receive(:send_data).with("This is very important\n")
-        @server.announce("This is very important", :except => @player1)
+        @server.announce("This is very important", :except => [@player1])
       end
 
       it 'should allow you to specify certain players' do
