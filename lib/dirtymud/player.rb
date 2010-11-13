@@ -1,6 +1,6 @@
 module Dirtymud
-  class Room
-    attr_accessor :description, :players, :exits
+  class Player
+    attr_accessor :name
 
     def initialize(attrs)
       attrs.each do |k, v| 
