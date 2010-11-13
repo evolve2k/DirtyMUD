@@ -3,21 +3,41 @@ module Dirtymud
     attr_accessor :players_by_connection, :rooms, :starting_room
 
     def initialize
+      @unauthed_users = {}
       @players_by_connection = {}
       @rooms = {}
       load_rooms!
     end
 
     def input_received!(from_connection, input)
-      @players_by_connection[from_connection].send(:do_command, input)
+      #is this connection unauthed?
+      if @unauthed_users.has_key?(from_connection)
+        con_state = @unauthed_users[from_connection]
+        if con_state[:name].nil?
+          con_state[:name] = input.chomp
+          from_connection.send_data 'Please enter your password: '
+        elsif con_state[:password].nil?
+          con_state[:password] = input.chomp
+          #TODO: verify password at some point
+          player_connected!(from_connection, :name => con_state[:name])
+        end
+      else
+        @players_by_connection[from_connection].send(:do_command, input)
+      end
     end
 
-    def player_connected!(connection)
-      player = Player.new(:name => 'Player ' + connection.object_id.to_s, :connection => connection)
+    def user_connected!(connection)
+      connection.send_data 'Enter Your Character Name: '
+    end
+
+    def player_connected!(connection, params = {})
+      player = Player.new(:name => params[:name], :connection => connection)
       @players_by_connection[connection] = player
 
       @starting_room.enter(player)
       player.connection.send_data("#{player.room.description}\n")
+
+      @unauthed_users.delete(connection) #TODO test this
 
       return player
     end

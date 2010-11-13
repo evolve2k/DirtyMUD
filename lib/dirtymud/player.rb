@@ -41,8 +41,12 @@ module Dirtymud
     end
 
     def do_command(input)
-      go(input) if input =~ /[nsew]/
-      help() if input =~ /help/
+      case input
+      when /^[nesw]$/ then go(input)
+      when /^say .+$/ then say(input)
+      when /^help$/ then help
+      else help
+      end
     end
   end
 end
