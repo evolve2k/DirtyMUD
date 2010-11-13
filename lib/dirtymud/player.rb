@@ -8,6 +8,10 @@ module Dirtymud
       end
     end
 
+    def send_data(data)
+      connection.send_data(data)
+    end
+
     #movement
     def go(dir)
       #find out what room to go to
@@ -21,6 +25,10 @@ module Dirtymud
       else
         connection.send_data("You can't go that way. #{room.exits.keys.join(' ')}")
       end
+    end
+
+    def help
+
     end
 
     def do_command(input)
