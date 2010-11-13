@@ -19,7 +19,8 @@ module Dirtymud
         elsif con_state[:password].nil?
           con_state[:password] = input.chomp
           #TODO: verify password at some point
-          player_connected!(from_connection, :name => con_state[:name])
+          from_connection.send_data("Welcome, #{con_state[:name]}.\n\n")
+          player = player_connected!(from_connection, :name => con_state[:name])
         end
       else
         @players_by_connection[from_connection].send(:do_command, input)
@@ -27,6 +28,7 @@ module Dirtymud
     end
 
     def user_connected!(connection)
+      @unauthed_users[connection] = {}
       connection.send_data 'Enter Your Character Name: '
     end
 

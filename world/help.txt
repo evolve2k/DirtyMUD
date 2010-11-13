@@ -1,2 +1,4 @@
 Commands:
-- Use n, s, e, or w to go in that direction. For example, to go North, type 'n' and press <enter>
+- Walking: n, s, e, or w | moves you in that direction. Example: to go North, type 'n' and press <enter>
+- Talking: say <msg> | talks to people you can see in the same room as you. Example: say hi there
+- Leaving: quit | logs you off

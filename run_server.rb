@@ -10,7 +10,7 @@ module Dirtymud
       #manage all connected clients
       @identifier = self.object_id
 
-      $server.player_connected!(self)
+      $server.user_connected!(self)
     end
 
     def receive_data(data)
