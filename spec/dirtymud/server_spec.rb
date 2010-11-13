@@ -12,10 +12,11 @@ describe Dirtymud::Server do
 
     describe '.input_received(from_connection, input)' do
       context 'when a player is connected' do
-        @dirk_con = EventMachine::Connection.new(nil)
-        @dirk = Dirtymud::Player.new(:name => 'Dirk', :connection => @dirk_con)
-
         it 'sends the command on to the player instance' do
+          @dirk_con = EventMachine::Connection.new(nil)
+          @dirk = Dirtymud::Player.new(:name => 'Dirk', :connection => @dirk_con)
+          @server.players_by_connection[@dirk_con] = @dirk
+
           @dirk.should_receive(:do_command).with('n')
           @server.input_received(@dirk_con, 'n')
         end
