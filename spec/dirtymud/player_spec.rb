@@ -68,5 +68,12 @@ describe Dirtymud::Player do
         @player.send_data('foo')
       end
     end
+
+    describe '#send_data' do
+      it "delegates to the player connection object" do
+        @player.connection.should_receive(:send_data).with('foo')
+        @player.send_data('foo')
+      end
+    end
   end
 end
