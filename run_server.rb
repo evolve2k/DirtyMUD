@@ -17,7 +17,7 @@ module Dirtymud
       #echo back to client
       # send_data ">>> You sent: #{data}"
       
-      $server.input_received!(self, data)
+      $server.input_received!(self, data.chomp)
 
       #send message to everyone else
       # World.instance.current_players.values.each do |player|

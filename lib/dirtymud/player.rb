@@ -11,9 +11,14 @@ module Dirtymud
     #movement
     def go(dir)
       #find out what room to go to
-      self.room = self.room.exits[dir.to_sym]
+      if room.exits[dir.to_sym]
+        self.room = room.exits[dir.to_sym]
+        connection.send_data(room.description)
+      else
+        connection.send_data("You can't go that way. #{room.exits.keys.join(' ')}")
+      end
 
-      self.connection.send_data(self.room.description)
+
     end
 
     def do_command(input)
