@@ -24,12 +24,12 @@ describe Dirtymud::Player do
       @player.connection.should be_a_kind_of(EventMachine::Connection)
     end
 
-    # describe '#do_command' do
-    #   context 'cardinal directions' do
-    #     context 'input: n, s, e, and w' do
-    #       @player.do_command('n')
-    #     end
-    #   end
-    # end
+    describe '#do_command' do
+      it 'handles commands for the cardinal directions' do
+        @player.should be_a_kind_of(Dirtymud::Player)
+        dirs = %w(n e s w)
+        dirs.each {|dir| @player.do_command(dir) }
+      end
+    end
   end
 end
