@@ -13,12 +13,14 @@ module Dirtymud
       #find out what room to go to
       if room.exits[dir.to_sym]
         self.room = room.exits[dir.to_sym]
-        connection.send_data(room.description)
+        connection.send_data("#{room.description}\n")
+        connection.send_data("You can go these ways:\n")
+        room.exits.each do |k, v|
+          connection.send_data("#{k}\n")
+        end
       else
         connection.send_data("You can't go that way. #{room.exits.keys.join(' ')}")
       end
-
-
     end
 
     def do_command(input)

@@ -35,7 +35,11 @@ describe Dirtymud::Player do
         #player shouldnt have trouble with the directional commands
         dirs = %w(n e s w)
         dirs.each do |dir| 
-          @player.connection.should_receive(:send_data).with(@room_center.exits[dir.to_sym].description)
+          @player.connection.should_receive(:send_data).with("#{@room_center.exits[dir.to_sym].description}\n")
+          @player.connection.should_receive(:send_data).with("You can go these ways:\n")
+          @room_center.exits[dir.to_sym].exits.each do |k, r|
+            @player.connection.should_receive(:send_data).with("#{k}\n")
+          end
           @player.room = @room_center
           @player.do_command(dir)
           @player.room.should == @room_center.exits[dir.to_sym]
