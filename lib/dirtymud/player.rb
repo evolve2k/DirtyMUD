@@ -32,11 +32,13 @@ module Dirtymud
     end
 
     def help
-
+      help_contents = File.read(File.expand_path('../../../world/help.txt', __FILE__))
+      send_data(help_contents)
     end
 
     def do_command(input)
       go(input) if input =~ /[nsew]/
+      help() if input =~ /help/
     end
   end
 end

@@ -39,11 +39,17 @@ describe Dirtymud::Player do
         @room_n.should_receive(:announce).with("Dirk has entered the room.", :except => [ @player ])
         @player.go('n')
       end
+    end
 
+    describe '#help' do
+      it 'returns the contents of world/help.txt' do
+        help_contents = File.read(File.expand_path('../../../world/help.txt', __FILE__))
+        @player.connection.should_receive(:send_data).with(help_contents)
+        @player.help
+      end
     end
 
     describe '#do_command' do
-
       it 'handles commands for the cardinal directions' do
         #player shouldnt have trouble with the directional commands
         dirs = %w(n e s w)
@@ -57,6 +63,10 @@ describe Dirtymud::Player do
           @player.do_command(dir)
           @player.room.should == @room_center.exits[dir.to_sym]
         end
+
+        #handles help
+        @player.should_receive(:help)
+        @player.do_command('help')
       end
 
     end

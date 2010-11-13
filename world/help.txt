@@ -1,0 +1,2 @@
+Commands:
+- Use n, s, e, or w to go in that direction. For example, to go North, type 'n' and press <enter>
