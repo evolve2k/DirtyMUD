@@ -1,0 +1,15 @@
+world: 
+  rooms:
+    - id: 1
+      description: "There is a room to the north - and a room to the south. They both look dangerous"
+      exits:
+        n: 2
+        s: 3
+    - id: 2
+      description: "This room isnt as dangerous as you thought"
+      exits:
+        n: 1
+    - id: 3
+      description: "There is a room to the south. It doesnt look dangerous at all"
+      exits:
+        s: 1
