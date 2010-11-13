@@ -37,12 +37,13 @@ describe Dirtymud::Server do
     end
 
     describe '#announce' do
-
       before do
         @connection1 = mock(EventMachine::Connection).as_null_object
         @connection2 = mock(EventMachine::Connection).as_null_object
+        @connection3 = mock(EventMachine::Connection).as_null_object
         @player1 = @server.player_connected!(@connection1)
         @player2 = @server.player_connected!(@connection2)
+        @player3 = @server.player_connected!(@connection3)
       end
       
       it 'should send a message to all connected players' do
@@ -58,11 +59,12 @@ describe Dirtymud::Server do
       end
 
       it 'should allow you to specify certain players' do
-        @connection1.should_receive(:send_data).with("This is very important\n")
-        @connection2.should_not_receive(:send_data).with("This is very important\n")
-        @server.announce("This is very important", :only => @player1)
+        msg = "This is very important\n"
+        @connection1.should_receive(:send_data).with(msg)
+        @connection2.should_receive(:send_data).with(msg)
+        @connection3.should_not_receive(:send_data).with(msg)
+        @server.announce("This is very important", :only => [@player1, @player2])
       end
-
     end
 
     describe 'loading rooms from a yml file' do
@@ -84,6 +86,5 @@ describe Dirtymud::Server do
         @server.starting_room.should == @server.rooms[1]
       end
     end
-
   end
 end

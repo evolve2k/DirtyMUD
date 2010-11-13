@@ -31,6 +31,10 @@ module Dirtymud
       end
     end
 
+    def say(message)
+      room.announce("#{name} says '#{message}'\n", :except => [self])
+    end
+
     def help
       help_contents = File.read(File.expand_path('../../../world/help.txt', __FILE__))
       send_data(help_contents)

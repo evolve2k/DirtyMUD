@@ -23,11 +23,11 @@ module Dirtymud
     end
 
     def announce(message, options = {})
-      players = options.has_key?(:only) ? [*options[:only]] : @players_by_connection.values
+      players = options.has_key?(:only) ? options[:only] : @players_by_connection.values
+      players = players.reject {|p| options[:except].include?(p)} if options.has_key?(:except)
+
       players.each do |player|
-        if !options[:except] || (options[:except] && !options[:except].include?(player))
-          player.connection.send_data("#{message}\n")
-        end
+        player.connection.send_data("#{message}\n")
       end
     end
 

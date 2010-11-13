@@ -70,6 +70,22 @@ describe Dirtymud::Player do
       end
     end
 
+    describe '#say(message)' do
+      it 'announces the message to everyone in the same room as the player' do
+        server = Dirtymud::Server.new
+        connection1 = mock(EventMachine::Connection).as_null_object
+        connection2 = mock(EventMachine::Connection).as_null_object
+        player1 = server.player_connected!(connection1)
+        player2 = server.player_connected!(connection2)
+        room = Dirtymud::Room.new(:description => 'Simple room.', :server => server, :players => [ player1, player2 ])
+        player1.room = room
+        player2.room = room
+
+        player2.connection.should_receive(:send_data).with("#{player1.name} says 'hello'\n\n")
+        player1.say('hello')
+      end
+    end
+
     describe '#send_data' do
       it "delegates to the player connection object" do
         @player.connection.should_receive(:send_data).with('foo')

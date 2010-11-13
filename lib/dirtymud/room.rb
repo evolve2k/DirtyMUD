@@ -25,7 +25,6 @@ module Dirtymud
     end
 
     def announce(message, options = {})
-      # puts "Announcing in room #{id}: `#{message}`"
       server.announce(message, options.merge(:only => players))
     end
   end
