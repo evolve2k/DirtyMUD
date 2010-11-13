@@ -1,0 +1,11 @@
+Short Term
+  - Add player#say <txt> command to let players talk in-room
+  - Add player#tell <player> <txt> command to send a private msg player to player
+  - Let players pick their name on connect
+
+Cool Shit To Prioritize
+  - Objects in-world that players can pick up
+  - Player inventories
+  - Player health
+  - Monsters
+  - Player vs Monster combat!
