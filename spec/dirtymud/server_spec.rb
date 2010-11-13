@@ -33,7 +33,7 @@ describe Dirtymud::Server do
 
     describe 'loading rooms from a yml file' do
       before :each do
-        yaml = { 'world' => { 'rooms' => [
+        yaml = { 'world' => { 'starting_room' => 1, 'rooms' => [
           { 'id' => 1, 'description' => "booyah", 'exits' => { 'n' => 2 } },
           { 'id' => 2, 'description' => "yahboo", 'exits' => { 's' => 1 } }
         ] } }
@@ -44,6 +44,10 @@ describe Dirtymud::Server do
         @server.rooms[1].id.should == 1
         @server.rooms[1].description.should == 'booyah'
         @server.rooms[1].exits[:n].description.should == 'yahboo'
+      end
+
+      it 'should set the starting_room' do
+        @server.starting_room.should == @server.rooms[1]
       end
     end
 
