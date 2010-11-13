@@ -21,7 +21,22 @@ describe Dirtymud::Server do
         end
       end
     end
+
+    describe 'loading rooms from a yml file' do
+      before :each do
+        yaml = { 'world' => { 'rooms' => [
+          { 'id' => 1, 'description' => "booyah", 'exits' => { 'n' => 2 } },
+          { 'id' => 2, 'description' => "yahboo", 'exits' => { 's' => 1 } }
+        ] } }
+        YAML.should_receive(:load_file).with(File.expand_path('../../../world/rooms.yml', __FILE__)).and_return(yaml)
+        @server.load_rooms
+      end
+      it 'should create room definitions' do
+        @server.rooms[1].id.should == 1
+        @server.rooms[1].description.should == 'booyah'
+        @server.rooms[1].exits[:n].description.should == 'yahboo'
+      end
+    end
+
   end
 end
-
-
