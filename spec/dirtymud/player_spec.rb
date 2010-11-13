@@ -3,12 +3,15 @@ require 'spec_helper'
 describe Dirtymud::Player do
   describe 'a player' do
     before do
-      @room_center = Dirtymud::Room.new(:description => 'Room Center')
-      @room_n = Dirtymud::Room.new(:description => 'Room North')
-      @room_s = Dirtymud::Room.new(:description => 'Room South')
-      @room_e = Dirtymud::Room.new(:description => 'Room East')
-      @room_w = Dirtymud::Room.new(:description => 'Room West')
-      @player = Dirtymud::Player.new(:name => 'Dirk', :connection => EventMachine::Connection.new(nil), :room => @room1)
+      @server = mock(Dirtymud::Server).as_null_object
+      @room_center = Dirtymud::Room.new(:description => 'Room Center', :server => @server)
+      @room_n = Dirtymud::Room.new(:description => 'Room North', :server => @server)
+      @room_s = Dirtymud::Room.new(:description => 'Room South', :server => @server)
+      @room_e = Dirtymud::Room.new(:description => 'Room East', :server => @server)
+      @room_w = Dirtymud::Room.new(:description => 'Room West', :server => @server)
+      
+      @connection = mock(EventMachine::Connection).as_null_object
+      @player = Dirtymud::Player.new(:name => 'Dirk', :connection => @connection, :room => @room1)
 
       #setup room exits
       @room_w.exits = {:e => @room_center}
@@ -27,10 +30,21 @@ describe Dirtymud::Player do
     end
 
     it 'has a connection' do
-      @player.connection.should be_a_kind_of(EventMachine::Connection)
+      @player.should respond_to(:connection)
+    end
+
+    describe '#go' do
+
+      it 'should make an announcement on the server' do
+        @player.room = @room_center
+        @room_n.should_receive(:announce).with("Dirk has entered the room.", :except => [ @player ])
+        @player.go('n')
+      end
+
     end
 
     describe '#do_command' do
+
       it 'handles commands for the cardinal directions' do
         #player shouldnt have trouble with the directional commands
         dirs = %w(n e s w)
@@ -45,6 +59,8 @@ describe Dirtymud::Player do
           @player.room.should == @room_center.exits[dir.to_sym]
         end
       end
+
     end
+
   end
 end

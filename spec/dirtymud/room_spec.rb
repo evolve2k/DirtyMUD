@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 describe Dirtymud::Room do
+
   describe 'a room' do
+
     before do
       @room = Dirtymud::Room.new(:description => 'Simple room.')
       @room2 = Dirtymud::Room.new(:description => 'Simple room.')
@@ -29,5 +31,16 @@ describe Dirtymud::Room do
     end
 
   end
-end
 
+  describe '#announce' do
+
+    it 'should make an announcement on the server' do
+      server = mock(Dirtymud::Server)
+      room = Dirtymud::Room.new(:description => 'Simple room.', :server => server, :players => [ mock(Dirtymud::Player) ])
+      server.should_receive(:announce).with("Important message", :only => room.players)
+      room.announce("Important message")
+    end
+
+  end
+
+end
