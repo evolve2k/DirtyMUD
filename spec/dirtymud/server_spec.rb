@@ -24,10 +24,15 @@ describe Dirtymud::Server do
     end
 
     describe '.player_connected(connection)' do
-      it 'creates a new player and adds them to players_by_connection hash' do
-        dirk_con = EventMachine::Connection.new(nil)
-        @server.player_connected!(dirk_con)
-        @server.players_by_connection[dirk_con].should be_kind_of(Dirtymud::Player)
+      before do
+        @dirk_con = mock(EventMachine::Connection)
+      end
+
+      it 'creates a new player, adds them to players_by_connection hash, and sends them the initial room description' do
+        #REFACTOR: split these assertions into seperate expectations, if possible.
+        @dirk_con.should_receive(:send_data).with(@server.starting_room.description)
+        @server.player_connected!(@dirk_con)
+        @server.players_by_connection[@dirk_con].should be_kind_of(Dirtymud::Player)
       end
     end
 

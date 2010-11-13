@@ -1,22 +1,23 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'eventmachine'
+require 'lib/dirtymud'
 
 
 module Dirtymud
-  module Server
+  module EventMachineServer
     def post_init
       #manage all connected clients
       @identifier = self.object_id
 
-      # @player = Player.new({:current_room => $world.rooms.first[1], :name => 'Player ' + $world.current_players.length.to_s, :em_client => self})
-      # $world.current_players[@player.name] = @player
+      $server.player_connected!(self)
     end
 
     def receive_data(data)
       #echo back to client
-      send_data ">>> You sent: #{data}"
-      # @player.handle_command(data)
+      # send_data ">>> You sent: #{data}"
+      
+      $server.input_received!(self, data)
 
       #send message to everyone else
       # World.instance.current_players.values.each do |player|
@@ -32,7 +33,11 @@ module Dirtymud
   end
 end
 
+$server = Dirtymud::Server.new
+
+puts "Server running on 127.0.0.1 4000"
 
 EventMachine::run {
-  EventMachine::start_server "127.0.0.1", 4000, Dirtymud::Server
+  EventMachine::start_server "127.0.0.1", 4000, Dirtymud::EventMachineServer
 }
+

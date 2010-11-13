@@ -12,6 +12,8 @@ module Dirtymud
     def go(dir)
       #find out what room to go to
       self.room = self.room.exits[dir.to_sym]
+
+      self.connection.send_data(self.room.description)
     end
 
     def do_command(input)

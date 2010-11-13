@@ -16,8 +16,8 @@ module Dirtymud
       player = Player.new(:name => 'Player ' + connection.object_id.to_s, :connection => connection)
       @players_by_connection[connection] = player
 
-      #TODO: drop player in the default room
-      player.room = @rooms[1]
+      player.room = @starting_room
+      player.connection.send_data(player.room.description)
     end
 
     def load_rooms!
