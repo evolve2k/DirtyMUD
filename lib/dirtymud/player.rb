@@ -40,10 +40,18 @@ module Dirtymud
       send_data(help_contents)
     end
 
+    def look
+      send_data(room.description)
+      room.players.reject{|p| p == self}.each do |p|
+        send_data("#{p.name} is here.")
+      end
+    end
+
     def do_command(input)
       case input
       when /^[nesw]$/ then go(input)
       when /^say (.+)$/ then say($1)
+      when /^look$/ then look
       when /^help$/ then help
       else help
       end

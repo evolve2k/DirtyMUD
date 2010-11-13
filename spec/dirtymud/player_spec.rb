@@ -75,14 +75,31 @@ describe Dirtymud::Player do
         server = Dirtymud::Server.new
         connection1 = mock(EventMachine::Connection).as_null_object
         connection2 = mock(EventMachine::Connection).as_null_object
-        player1 = server.player_connected!(connection1)
-        player2 = server.player_connected!(connection2)
+        player1 = server.player_connected!(connection1, :name => 'P1')
+        player2 = server.player_connected!(connection2, :name => 'P2')
         room = Dirtymud::Room.new(:description => 'Simple room.', :server => server, :players => [ player1, player2 ])
         player1.room = room
         player2.room = room
 
         player2.connection.should_receive(:write).with("#{player1.name} says 'hello'")
         player1.say('hello')
+      end
+    end
+
+    describe '#look' do
+      it 'returns the room description and all of the people in the room' do
+        server = Dirtymud::Server.new
+        connection1 = mock(EventMachine::Connection).as_null_object
+        connection2 = mock(EventMachine::Connection).as_null_object
+        player1 = server.player_connected!(connection1, :name => 'P1')
+        player2 = server.player_connected!(connection2, :name => 'P2')
+        room = Dirtymud::Room.new(:description => 'Simple room.', :server => server, :players => [ player1, player2 ])
+        player1.room = room
+        player2.room = room
+
+        player1.connection.should_receive(:write).with(room.description)
+        player1.connection.should_receive(:write).with('P2 is here.')
+        player1.look
       end
     end
 
