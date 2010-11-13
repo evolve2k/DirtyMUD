@@ -1,4 +1,5 @@
 world: 
+  starting_room: 1
   rooms:
     - id: 1
       description: "There is a room to the north - and a room to the south. They both look dangerous"
