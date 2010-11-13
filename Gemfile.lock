@@ -1,10 +1,15 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    autotest (4.4.1)
+    autotest-fsevent (0.2.3)
+      sys-uname
+    autotest-growl (0.2.6)
     columnize (0.3.1)
     diff-lcs (1.1.2)
     eventmachine (0.12.10)
     linecache (0.43)
+    redgreen (1.2.2)
     rspec (2.0.1)
       rspec-core (~> 2.0.1)
       rspec-expectations (~> 2.0.1)
@@ -20,11 +25,16 @@ GEM
       ruby-debug-base (~> 0.10.3.0)
     ruby-debug-base (0.10.3)
       linecache (>= 0.3)
+    sys-uname (0.8.4)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  autotest
+  autotest-fsevent
+  autotest-growl
   eventmachine
+  redgreen
   rspec
   ruby-debug
