@@ -3,13 +3,19 @@ require 'spec_helper'
 describe Dirtymud::Player do
   describe 'a player' do
     before do
-      @room1 = Dirtymud::Room.new(:description => 'Room 1')
-      @room2 = Dirtymud::Room.new(:description => 'Room 2')
+      @room_center = Dirtymud::Room.new(:description => 'Room Center')
+      @room_n = Dirtymud::Room.new(:description => 'Room North')
+      @room_s = Dirtymud::Room.new(:description => 'Room South')
+      @room_e = Dirtymud::Room.new(:description => 'Room East')
+      @room_w = Dirtymud::Room.new(:description => 'Room West')
       @player = Dirtymud::Player.new(:name => 'Dirk', :connection => EventMachine::Connection.new(nil), :room => @room1)
 
       #setup room exits
-      @room1.exits = {:n => @room2}
-      @room2.exits = {:s => @room1}
+      @room_w.exits = {:e => @room_center}
+      @room_e.exits = {:w => @room_center}
+      @room_n.exits = {:s => @room_center}
+      @room_s.exits = {:n => @room_center}
+      @room_center.exits = {:n => @room_n, :s => @room_s, :e => @room_e, :w => @room_w}
     end
 
     it 'has a name' do
@@ -26,9 +32,13 @@ describe Dirtymud::Player do
 
     describe '#do_command' do
       it 'handles commands for the cardinal directions' do
-        @player.should be_a_kind_of(Dirtymud::Player)
+        #player shouldnt have trouble with the directional commands
         dirs = %w(n e s w)
-        dirs.each {|dir| @player.do_command(dir) }
+        dirs.each do |dir| 
+          @player.room = @room_center
+          @player.do_command(dir)
+          @player.room.should == @room_center.exits[dir.to_sym]
+        end
       end
     end
   end

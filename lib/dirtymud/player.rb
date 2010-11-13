@@ -10,7 +10,8 @@ module Dirtymud
 
     #movement
     def go(dir)
-
+      #find out what room to go to
+      self.room = self.room.exits[dir.to_sym]
     end
 
     def do_command(input)
