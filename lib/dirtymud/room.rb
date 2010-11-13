@@ -1,6 +1,6 @@
 module Dirtymud
   class Room
-    attr_accessor :description, :players, :exits
+    attr_accessor :id, :description, :players, :exits
 
     def initialize(attrs)
       @players = []
