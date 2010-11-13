@@ -15,11 +15,11 @@ module Dirtymud
         con_state = @unauthed_users[from_connection]
         if con_state[:name].nil?
           con_state[:name] = input.chomp
-          from_connection.send_data 'Please enter your password: '
+          from_connection.write 'Please enter your password: '
         elsif con_state[:password].nil?
           con_state[:password] = input.chomp
           #TODO: verify password at some point
-          from_connection.send_data("Welcome, #{con_state[:name]}.\n\n")
+          from_connection.write("Welcome, #{con_state[:name]}.\n\n")
           player = player_connected!(from_connection, :name => con_state[:name])
         end
       else
@@ -29,7 +29,7 @@ module Dirtymud
 
     def user_connected!(connection)
       @unauthed_users[connection] = {}
-      connection.send_data 'Enter Your Character Name: '
+      connection.write 'Enter Your Character Name: '
     end
 
     def player_connected!(connection, params = {})
@@ -37,7 +37,7 @@ module Dirtymud
       @players_by_connection[connection] = player
 
       @starting_room.enter(player)
-      player.connection.send_data("#{player.room.description}\n")
+      player.send_data("#{player.room.description}")
 
       @unauthed_users.delete(connection) #TODO test this
 
@@ -49,7 +49,7 @@ module Dirtymud
       players = players.reject {|p| options[:except].include?(p)} if options.has_key?(:except)
 
       players.each do |player|
-        player.connection.send_data("#{message}\n")
+        player.send_data("#{message}")
       end
     end
 

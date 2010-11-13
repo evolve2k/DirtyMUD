@@ -9,7 +9,7 @@ module Dirtymud
     end
 
     def send_data(data)
-      connection.send_data(data)
+      connection.write(data)
     end
 
     #movement
@@ -21,18 +21,18 @@ module Dirtymud
         room.exits[dir.to_sym].enter(self)
 
         # tell them about new places to go
-        connection.send_data("#{room.description}\n")
-        connection.send_data("You can go these ways:\n")
+        send_data("#{room.description}\n")
+        send_data("You can go these ways:\n")
         room.exits.each do |k, v|
-          connection.send_data("#{k}\n")
+          send_data("#{k}\n")
         end
       else
-        connection.send_data("You can't go that way. #{room.exits.keys.join(' ')}")
+        send_data("You can't go that way. #{room.exits.keys.join(' ')}")
       end
     end
 
     def say(message)
-      room.announce("#{name} says '#{message}'\n", :except => [self])
+      room.announce("#{name} says '#{message}'", :except => [self])
     end
 
     def help

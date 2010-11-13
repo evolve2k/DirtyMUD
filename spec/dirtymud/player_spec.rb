@@ -44,7 +44,7 @@ describe Dirtymud::Player do
     describe '#help' do
       it 'returns the contents of world/help.txt' do
         help_contents = File.read(File.expand_path('../../../world/help.txt', __FILE__))
-        @player.connection.should_receive(:send_data).with(help_contents)
+        @player.connection.should_receive(:write).with(help_contents)
         @player.help
       end
     end
@@ -54,10 +54,10 @@ describe Dirtymud::Player do
         #player shouldnt have trouble with the directional commands
         dirs = %w(n e s w)
         dirs.each do |dir| 
-          @player.connection.should_receive(:send_data).with("#{@room_center.exits[dir.to_sym].description}\n")
-          @player.connection.should_receive(:send_data).with("You can go these ways:\n")
+          @player.connection.should_receive(:write).with("#{@room_center.exits[dir.to_sym].description}\n")
+          @player.connection.should_receive(:write).with("You can go these ways:\n")
           @room_center.exits[dir.to_sym].exits.each do |k, r|
-            @player.connection.should_receive(:send_data).with("#{k}\n")
+            @player.connection.should_receive(:write).with("#{k}\n")
           end
           @player.room = @room_center
           @player.do_command(dir)
@@ -81,14 +81,14 @@ describe Dirtymud::Player do
         player1.room = room
         player2.room = room
 
-        player2.connection.should_receive(:send_data).with("#{player1.name} says 'hello'\n\n")
+        player2.connection.should_receive(:write).with("#{player1.name} says 'hello'")
         player1.say('hello')
       end
     end
 
     describe '#send_data' do
       it "delegates to the player connection object" do
-        @player.connection.should_receive(:send_data).with('foo')
+        @player.connection.should_receive(:write).with('foo')
         @player.send_data('foo')
       end
     end

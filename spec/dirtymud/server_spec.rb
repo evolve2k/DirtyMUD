@@ -30,7 +30,7 @@ describe Dirtymud::Server do
 
       it 'creates a new player, adds them to players_by_connection hash, and sends them the initial room description' do
         #REFACTOR: split these assertions into seperate expectations, if possible.
-        @dirk_con.should_receive(:send_data).with("#{@server.starting_room.description}\n")
+        @dirk_con.should_receive(:write).with("#{@server.starting_room.description}")
         @server.player_connected!(@dirk_con, :name => 'Dirk')
         @server.players_by_connection[@dirk_con].should be_kind_of(Dirtymud::Player)
       end
@@ -47,23 +47,22 @@ describe Dirtymud::Server do
       end
       
       it 'should send a message to all connected players' do
-        @connection1.should_receive(:send_data).with("This is very important\n")
-        @connection2.should_receive(:send_data).with("This is very important\n")
+        @connection1.should_receive(:write).with("This is very important")
+        @connection2.should_receive(:write).with("This is very important")
         @server.announce("This is very important")
       end
 
       it 'should allow you to ignore certain players' do
-        @connection1.should_not_receive(:send_data).with("This is very important\n")
-        @connection2.should_receive(:send_data).with("This is very important\n")
+        @connection1.should_not_receive(:write).with("This is very important")
+        @connection2.should_receive(:write).with("This is very important")
         @server.announce("This is very important", :except => [@player1])
       end
 
       it 'should allow you to specify certain players' do
-        msg = "This is very important\n"
-        @connection1.should_receive(:send_data).with(msg)
-        @connection2.should_receive(:send_data).with(msg)
-        @connection3.should_not_receive(:send_data).with(msg)
-        @server.announce("This is very important", :only => [@player1, @player2])
+        msg = "This is very important"
+        @connection1.should_receive(:write).with(msg)
+        @connection3.should_not_receive(:write).with(msg)
+        @server.announce("This is very important", :only => [@player1])
       end
     end
 

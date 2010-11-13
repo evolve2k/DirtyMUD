@@ -30,6 +30,10 @@ module Dirtymud
     def unbind
       # World.instance.current_players.delete(@player)
     end
+
+    def write(data)
+      send_data(data + "\n\n")
+    end
   end
 end
 
