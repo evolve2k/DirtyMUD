@@ -3,6 +3,9 @@ module Dirtymud
     attr_accessor :description, :players, :exits
 
     def initialize(attrs)
+      @players = []
+      @exits = {}
+
       attrs.each do |k, v| 
         self.send("#{k}=", v)
       end

@@ -9,6 +9,10 @@ describe Dirtymud::Player do
     it 'has a name' do
       @player.name.should == 'Dirk'
     end
+
+    it 'has a room' 
+
+    it 'has a connection'
   end
 end
 
