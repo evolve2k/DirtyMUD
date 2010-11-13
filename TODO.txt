@@ -1,7 +1,6 @@
 Short Term
   - Prompts
   - Ticks
-  - Look command
 
 Cool Shit To Prioritize
   - Objects in-world that players can pick up
@@ -14,3 +13,4 @@ Cool Shit To Prioritize
 
 DONE
   [x] Let players pick their name on connect
+  [x] Look command
