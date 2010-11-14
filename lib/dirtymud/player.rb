@@ -41,7 +41,7 @@ module Dirtymud
     end
 
     def look
-      send_data(room.description)
+      send_data(room.look_str)
       room.players.reject{|p| p == self}.each do |p|
         send_data("#{p.name} is here.")
       end

@@ -36,5 +36,9 @@ module Dirtymud
     def look_str
       "#{description}\n#{exits_str}"
     end
+
+    def inspect
+      "Room #{id}"
+    end
   end
 end

@@ -4,8 +4,9 @@ describe Dirtymud::Room do
 
   describe 'a room' do
     before do
-      @room = Dirtymud::Room.new(:description => 'Simple room.')
-      @room2 = Dirtymud::Room.new(:description => 'Simple room.')
+      @server = mock(Dirtymud::Server).as_null_object
+      @room = Dirtymud::Room.new(:description => 'Simple room.', :server => @server, :id => '1')
+      @room2 = Dirtymud::Room.new(:description => 'Room 2', :server => @server, :id => '2')
       @player = Dirtymud::Player.new(:name => 'Dirk')
 
       #setup exits
@@ -27,6 +28,29 @@ describe Dirtymud::Room do
       @room.exits[:n].should == @room2
       @room2.exits[:s].should == @room
       @room.exits[:e].should be_nil
+    end
+
+    describe '#enter(player)' do
+      it 'moves the player into the room' do
+        @player.room = @room2
+        @room2.leave(@player)
+        @room.enter(@player)
+        @player.room.should == @room
+      end
+
+      it 'announces the player entry to the room' do
+        @room.should_receive(:announce).with("#{@player.name} has entered the room.", {:except => [@player]})
+        @player.room = @room2
+        @room.enter(@player)
+      end
+    end
+
+    describe '#leave(player)' do
+      it 'announces the player departure to the room' do
+        @room2.should_receive(:announce).with("#{@player.name} has left the room.", {:except => [@player]})
+        @player.room = @room2
+        @room2.leave(@player)
+      end
     end
 
     describe '#announce' do

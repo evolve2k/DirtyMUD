@@ -97,8 +97,7 @@ describe Dirtymud::Player do
         player1.room = room
         player2.room = room
 
-        player1.connection.should_receive(:write).with(room.description)
-        player1.connection.should_receive(:write).with('P2 is here.')
+        player1.connection.should_receive(:write).with(room.look_str)
         player1.look
       end
     end
