@@ -68,11 +68,23 @@ module Dirtymud
       end
     end
 
+    def inventory
+      str = "Your items:\n"
+      if items.length > 0
+        items.each { |i| str << "  - #{i.name}" }
+      else
+        str << "  (nothing in your inventory, yet...)"
+      end
+
+      send_data(str)
+    end
+
     def do_command(input)
       case input
       when /^[nesw]$/ then go(input)
       when /^say (.+)$/ then say($1)
       when /^get (.+)$/ then get($1)
+      when /^(i|inv|inventory)$/ then inventory
       when /^look$/ then look
       when /^help$/ then help
       else help

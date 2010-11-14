@@ -130,6 +130,23 @@ describe Dirtymud::Player do
       end
     end
 
+    describe '#inventory' do
+      context 'when the player has something in his inventory' do
+        it 'sends the player connection the list of items in the inventory' do
+          @player.items = [ Dirtymud::Item.new(:name => 'a sword') ]
+          @player.connection.should_receive(:write).with("Your items:\n  - a sword")
+          @player.inventory
+        end
+      end
+      context 'when the player does not have anything in his inventory' do
+        it 'sends the player connection an empty inventory list' do
+          @player.items = [ ]
+          @player.connection.should_receive(:write).with("Your items:\n  (nothing in your inventory, yet...)")
+          @player.inventory
+        end
+      end
+    end
+
     describe '#do_command' do
       it 'handles commands for the cardinal directions' do
         #player shouldnt have trouble with the directional commands
@@ -147,6 +164,12 @@ describe Dirtymud::Player do
         #handles get
         @player.should_receive(:get).with('sword')
         @player.do_command('get sword')
+
+        #handles inventory via i, inv, and inventory inputs
+        @player.should_receive(:inventory).exactly(3).times
+        @player.do_command('inventory')
+        @player.do_command('inv')
+        @player.do_command('i')
 
         #handles help
         @player.should_receive(:help)
