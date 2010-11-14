@@ -22,7 +22,7 @@ module Dirtymud
         new_room.enter(self)
 
         # send the new room look to the player
-        send_data(new_room.look_str)
+        send_data(new_room.look_str(self))
       else
         send_data("You can't go that way. #{room.exits.keys.join(' ')}")
       end
@@ -62,7 +62,7 @@ module Dirtymud
     end
 
     def look
-      send_data(room.look_str)
+      send_data(room.look_str(self))
       room.players.reject{|p| p == self}.each do |p|
         send_data("#{p.name} is here.")
       end

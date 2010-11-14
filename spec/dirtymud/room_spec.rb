@@ -8,6 +8,8 @@ describe Dirtymud::Room do
       @room = Dirtymud::Room.new(:description => 'Simple room.', :server => @server, :id => '1')
       @room2 = Dirtymud::Room.new(:description => 'Room 2', :server => @server, :id => '2')
       @player = Dirtymud::Player.new(:name => 'Dirk')
+      @player2 = Dirtymud::Player.new(:name => 'Alice')
+      @player3 = Dirtymud::Player.new(:name => 'Bob')
 
       #setup exits
       @room.exits[:n] = @room2
@@ -77,9 +79,30 @@ describe Dirtymud::Room do
       end
     end
 
-    describe '#look_str' do
-      it 'returns the room description and exits' do
-        @room.look_str.should == "#{@room.description}\n#{@room.exits_str}"
+    describe '#players_str(for_player)' do
+      it 'returns all the players in the room besides _for_player_' do
+        @room.players = []
+        @room.players << @player
+        @room.players << @player2
+        @room.players << @player3
+        @room.players_str(@player).should include("Alice is here.", "Bob is here")
+      end
+    end
+
+    describe '#look_str(for_player)' do
+      context 'when nobody else is in the room' do
+        it 'returns the room description and exits' do
+          @room.items << Dirtymud::Item.new(:name => 'a sword')
+          @room.look_str(@player1).should include("#{@room.description}")
+          @room.look_str(@player1).should include("#{@room.exits_str}")
+        end
+      end
+
+      context 'when alice is also in the room' do
+        it 'shows that player2 is here as well' do
+          @room.players = [ @player2 ]
+          @room.look_str(@player).should include("#{@player2.name} is here.")
+        end
       end
     end
   end
