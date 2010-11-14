@@ -27,5 +27,14 @@ module Dirtymud
     def announce(message, options = {})
       server.announce(message, options.merge(:only => players))
     end
+
+    def exits_str
+      dirs = exits.collect{|dir, room| dir.to_s.upcase}.join(' ')
+      "[Exits: #{dirs}]"
+    end
+
+    def look_str
+      "#{description}\n#{exits_str}"
+    end
   end
 end

@@ -28,23 +28,36 @@ describe Dirtymud::Room do
       @room2.exits[:s].should == @room
       @room.exits[:e].should be_nil
     end
-  end
 
-  describe '#announce' do
-    before do
-      @server = mock(Dirtymud::Server).as_null_object
-      @connection1 = mock(EventMachine::Connection).as_null_object
-      @connection2 = mock(EventMachine::Connection).as_null_object
-      @connection3 = mock(EventMachine::Connection).as_null_object
-      @player1 = @server.player_connected!(@connection1)
-      @player2 = @server.player_connected!(@connection2)
-      @player3 = @server.player_connected!(@connection3)
-      @room = Dirtymud::Room.new(:description => 'Simple room.', :server => @server, :players => [ @player1, @player2, @player3 ])
+    describe '#announce' do
+      before do
+        @server = mock(Dirtymud::Server).as_null_object
+        @connection1 = mock(EventMachine::Connection).as_null_object
+        @connection2 = mock(EventMachine::Connection).as_null_object
+        @connection3 = mock(EventMachine::Connection).as_null_object
+        @player1 = @server.player_connected!(@connection1)
+        @player2 = @server.player_connected!(@connection2)
+        @player3 = @server.player_connected!(@connection3)
+        @room = Dirtymud::Room.new(:description => 'Simple room.', :server => @server, :players => [ @player1, @player2, @player3 ])
+      end
+
+      it 'calls server#announce to everyone in the room' do
+        @server.should_receive(:announce).with("Important message", :only => @room.players)
+        @room.announce("Important message")
+      end
     end
 
-    it 'calls server#announce to everyone in the room' do
-      @server.should_receive(:announce).with("Important message", :only => @room.players)
-      @room.announce("Important message")
+    describe '#exits_str' do
+      it 'returns the exit string for this room' do
+        @room.exits_str.should == "[Exits: N]"
+      end
+    end
+
+    describe '#look_str' do
+      it 'returns the room description and exits' do
+        @room.look_str.should == "#{@room.description}\n#{@room.exits_str}"
+      end
     end
   end
+
 end
