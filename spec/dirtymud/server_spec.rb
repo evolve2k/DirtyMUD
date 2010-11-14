@@ -30,7 +30,7 @@ describe Dirtymud::Server do
 
       it 'creates a new player, adds them to players_by_connection hash, and sends them the initial room description' do
         #REFACTOR: split these assertions into seperate expectations, if possible.
-        @dirk_con.should_receive(:write).with("#{@server.starting_room.description}")
+        @dirk_con.should_receive(:write).with("#{@server.starting_room.look_str}")
         @server.player_connected!(@dirk_con, :name => 'Dirk')
         @server.players_by_connection[@dirk_con].should be_kind_of(Dirtymud::Player)
       end
