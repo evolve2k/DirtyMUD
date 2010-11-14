@@ -7,6 +7,7 @@ module Dirtymud
       @players_by_connection = {}
       @rooms = {}
       @items = {}
+      load_items!
       load_rooms!
     end
 
@@ -56,16 +57,28 @@ module Dirtymud
 
     def load_rooms!
       yaml = YAML.load_file(File.expand_path('../../../world/rooms.yml', __FILE__))['world']
+
       # First pass loads all the rooms
       yaml['rooms'].each do |room|
-        @rooms[room['id']] = Room.new(:id => room['id'], :description => room['description'], :exits => {}, :server => self)
+        @rooms[room['id']] = Room.new(
+          :id => room['id'],
+          :description => room['description'],
+          :exits => {}, 
+          :server => self)
+
+        #add items to this room
+        if room.has_key?('items')
+          room['items'].each { |item_id| @rooms[room['id']].items << @items[item_id].clone }
+        end
       end
+
       # Second pass creates exit-links
       yaml['rooms'].each do |room|
         room['exits'].each do |d, id|
           @rooms[room['id']].exits[d.to_sym] = @rooms[id]
         end
       end
+
       @starting_room = @rooms[yaml['starting_room']]
     end
 

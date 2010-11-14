@@ -10,6 +10,15 @@ describe Dirtymud::Server do
       @server.players_by_connection.should be_kind_of(Hash)
     end
 
+    describe '.initialize' do
+      it 'loads the rooms' do
+        #TODO: find out how to test an that an initializer invokes some methods like #load_rooms!
+      end
+      it 'loads the items' do
+        #TODO: find out how to test an that an initializer invokes some methods like #load_rooms!
+      end
+    end
+
     describe '.input_received!(from_connection, input)' do
       context 'when a player is connected' do
         it 'sends the command on to the player instance' do
@@ -86,23 +95,31 @@ describe Dirtymud::Server do
       end
     end
 
-
-    describe 'loading rooms from a yml file' do
+    describe '#load_rooms!' do
       before :each do
-        yaml = { 'world' => { 'starting_room' => 1, 'rooms' => [
-          { 'id' => 1, 'description' => "booyah", 'exits' => { 'n' => 2 } },
+        items_yaml = {'items' => [
+          {'id' => 1, 'name' => 'a sword'}
+        ]}
+        YAML.should_receive(:load_file).with(File.expand_path('../../../world/items.yml', __FILE__)).and_return(items_yaml)
+        @server.load_items!
+
+        rooms_yaml = { 'world' => { 'starting_room' => 1, 'rooms' => [
+          { 'id' => 1, 'description' => "booyah", 'exits' => { 'n' => 2 }, 'items' => [1] },
           { 'id' => 2, 'description' => "yahboo", 'exits' => { 's' => 1 } }
         ] } }
-        YAML.should_receive(:load_file).with(File.expand_path('../../../world/rooms.yml', __FILE__)).and_return(yaml)
+        YAML.should_receive(:load_file).with(File.expand_path('../../../world/rooms.yml', __FILE__)).and_return(rooms_yaml)
         @server.load_rooms!
       end
-      it 'should create room definitions' do
+
+      it 'creates rooms with their starting items too' do
         @server.rooms[1].id.should == 1
         @server.rooms[1].description.should == 'booyah'
         @server.rooms[1].exits[:n].description.should == 'yahboo'
+        @server.rooms[1].items[0].should be_kind_of(Dirtymud::Item)
+        @server.rooms[1].items[0].name.should == 'a sword'
       end
 
-      it 'should set the starting_room' do
+      it 'sets the starting_room' do
         @server.starting_room.should == @server.rooms[1]
       end
     end
