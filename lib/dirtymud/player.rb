@@ -18,14 +18,11 @@ module Dirtymud
       if room.exits[dir.to_sym]
         # switch rooms
         room.leave(self)
-        room.exits[dir.to_sym].enter(self)
+        new_room = room.exits[dir.to_sym]
+        new_room.enter(self)
 
-        # tell them about new places to go
-        send_data("#{room.description}\n")
-        send_data("You can go these ways:\n")
-        room.exits.each do |k, v|
-          send_data("#{k}\n")
-        end
+        # send the new room look to the player
+        send_data(new_room.look_str)
       else
         send_data("You can't go that way. #{room.exits.keys.join(' ')}")
       end

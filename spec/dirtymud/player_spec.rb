@@ -34,9 +34,22 @@ describe Dirtymud::Player do
     end
 
     describe '#go' do
-      it 'should make an announcement on the server' do
+      it 'makes an announcement on the server' do
         @player.room = @room_center
         @room_n.should_receive(:announce).with("Dirk has entered the room.", :except => [ @player ])
+        @player.go('n')
+      end
+
+      it 'moves the player to the new room' do
+        @player.room = @room_center
+        @player.go('n')
+        @player.room.should == @room_n
+        @room_n.players.should include(@player)
+      end
+
+      it 'tells the player about the new room' do
+        @player.room = @room_center
+        @player.connection.should_receive(:write).with(@room_n.look_str)
         @player.go('n')
       end
     end
@@ -54,14 +67,9 @@ describe Dirtymud::Player do
         #player shouldnt have trouble with the directional commands
         dirs = %w(n e s w)
         dirs.each do |dir| 
-          @player.connection.should_receive(:write).with("#{@room_center.exits[dir.to_sym].description}\n")
-          @player.connection.should_receive(:write).with("You can go these ways:\n")
-          @room_center.exits[dir.to_sym].exits.each do |k, r|
-            @player.connection.should_receive(:write).with("#{k}\n")
-          end
+          @player.should_receive(:go).with(dir.to_s)
           @player.room = @room_center
           @player.do_command(dir)
-          @player.room.should == @room_center.exits[dir.to_sym]
         end
 
         #handles help
