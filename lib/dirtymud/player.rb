@@ -46,6 +46,9 @@ module Dirtymud
           
           #remove the item from the room
           room.items.delete(item)
+          
+          #tell the player they got it
+          send_data("You get #{item.name}")
         else
           #ask the player to be more specific
           send_data("Be more specific. Which did you want to get? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
@@ -69,6 +72,9 @@ module Dirtymud
           
           #remove the item from the player
           items.delete(item)
+
+          #tell the player they dropped it
+          send_data("You drop #{item.name}")
         else
           #ask the player to be more specific
           send_data("Be more specific. Which did you want to drop? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")

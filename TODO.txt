@@ -1,5 +1,5 @@
 Bugs
-- look shows other players twice
+- look shows other players twice?
 - add 'you get x' when you get something
 
 Short Term
