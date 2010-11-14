@@ -149,28 +149,33 @@ describe Dirtymud::Player do
 
     describe '#do_command' do
       it 'handles commands for the cardinal directions' do
-        #player shouldnt have trouble with the directional commands
         dirs = %w(n e s w)
         dirs.each do |dir| 
           @player.should_receive(:go).with(dir.to_s)
           @player.room = @room_center
           @player.do_command(dir)
         end
+      end
 
-        #handles look
+      it 'handles look' do
         @player.should_receive(:look)
         @player.do_command('look')
-        
-        #handles get
+      end
+
+      it 'handles get' do
         @player.should_receive(:get).with('sword')
         @player.do_command('get sword')
+      end
 
+      it 'handles inventory' do
         #handles inventory via i, inv, and inventory inputs
         @player.should_receive(:inventory).exactly(3).times
         @player.do_command('inventory')
         @player.do_command('inv')
         @player.do_command('i')
+      end
 
+      it 'handles help' do
         #handles help
         @player.should_receive(:help)
         @player.do_command('help')
