@@ -12,7 +12,6 @@ module Dirtymud
       connection.write(data)
     end
 
-    #movement
     def go(dir)
       #find out what room to go to
       if room.exits[dir.to_sym]
@@ -30,6 +29,7 @@ module Dirtymud
 
     def say(message)
       room.announce("#{name} says '#{message}'", :except => [self])
+      send_data("You say '#{message}'")
     end
 
     def help
