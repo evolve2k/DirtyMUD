@@ -134,7 +134,7 @@ describe Dirtymud::Player do
       context 'when the player has something in his inventory' do
         it 'sends the player connection the list of items in the inventory' do
           @player.items = [ Dirtymud::Item.new(:name => 'a sword') ]
-          @player.connection.should_receive(:write).with("Your items:\n  - a sword")
+          @player.connection.should_receive(:write).with("Your items:\n  - a sword\n")
           @player.inventory
         end
       end

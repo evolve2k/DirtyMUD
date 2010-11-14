@@ -71,7 +71,7 @@ module Dirtymud
     def inventory
       str = "Your items:\n"
       if items.length > 0
-        items.each { |i| str << "  - #{i.name}" }
+        items.each { |i| str << "  - #{i.name}\n" }
       else
         str << "  (nothing in your inventory, yet...)"
       end
