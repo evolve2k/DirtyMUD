@@ -49,6 +49,9 @@ module Dirtymud
           
           #tell the player they got it
           send_data("You get #{item.name}")
+
+          #tell everyone else in the room that the player took it
+          room.announce("#{self.name} picks up #{item.name}", :except => [self])
         else
           #ask the player to be more specific
           send_data("Be more specific. Which did you want to get? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
@@ -75,6 +78,9 @@ module Dirtymud
 
           #tell the player they dropped it
           send_data("You drop #{item.name}")
+
+          #tell everyone else in the room that the player took it
+          room.announce("#{self.name} drops #{item.name}", :except => [self])
         else
           #ask the player to be more specific
           send_data("Be more specific. Which did you want to drop? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")

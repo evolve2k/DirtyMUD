@@ -99,11 +99,12 @@ describe Dirtymud::Player do
       end
 
       context 'when there is only one possible item match' do
-        it 'takes the item from the room and adds it to the player' do
+        it 'takes the item from the room and adds it to the player, and announces this to players in the room' do
           @sword = Dirtymud::Item.new(:name => 'sword')
           @room.items << @sword
           @player1.items.should be_empty
           @player1.connection.should_receive(:write).with('You get sword')
+          @player1.room.should_receive(:announce).with("#{@player1.name} picks up #{@sword.name}", :except => [@player1])
           @player1.get('sword')
           @player1.items.should include(@sword)
         end
@@ -149,6 +150,7 @@ describe Dirtymud::Player do
           @player1.room.items.should_not include(@sword)
 
           @player1.connection.should_receive(:write).with('You drop sword')
+          @player1.room.should_receive(:announce).with("#{@player1.name} drops #{@sword.name}", :except => [@player1])
           @player1.drop('sword')
 
           @player1.items.should_not include(@sword)
