@@ -1,8 +1,9 @@
 module Dirtymud
   class Player
-    attr_accessor :name, :room, :connection
+    attr_accessor :name, :room, :connection, :items
 
     def initialize(attrs)
+      @items = []
       attrs.each do |k, v| 
         self.send("#{k}=", v)
       end
@@ -30,6 +31,29 @@ module Dirtymud
     def say(message)
       room.announce("#{name} says '#{message}'", :except => [self])
       send_data("You say '#{message}'")
+    end
+
+    def get(item_text)
+      #try to find an item in this room who's name contains the requested item text
+      matches = room.items.select{|i| i.name =~ /#{item_text}/}
+
+      if matches.length > 0
+        if matches.length == 1
+          item = matches[0]
+
+          #give the item to the player
+          items << item
+          
+          #remove the item from the room
+          room.items.delete(item)
+        else
+          #ask the player to be more specific
+          send_data("Be more specific. Which did you want to get? #{matches.collect{|i| "'#{i.name}', "}.join.chop.chop}")
+        end
+      else
+        #tell the player there's nothing here by that name
+        send_data("There's nothing here that looks like '#{item_text}'")
+      end
     end
 
     def help

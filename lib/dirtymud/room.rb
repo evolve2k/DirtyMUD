@@ -1,10 +1,11 @@
 module Dirtymud
   class Room
-    attr_accessor :id, :description, :players, :exits, :server
+    attr_accessor :id, :description, :players, :exits, :server, :items
 
     def initialize(attrs)
       @players = []
       @exits = {}
+      @items = []
 
       attrs.each do |k, v| 
         self.send("#{k}=", v)

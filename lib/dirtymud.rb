@@ -1,3 +1,4 @@
-require File.expand_path('../dirtymud/room', __FILE__)
-require File.expand_path('../dirtymud/player', __FILE__)
-require File.expand_path('../dirtymud/server', __FILE__)
+requires = %w(room player server item)
+requires.each do |r|
+  require File.expand_path("../dirtymud/#{r}", __FILE__)
+end

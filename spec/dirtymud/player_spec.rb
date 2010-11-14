@@ -32,6 +32,10 @@ describe Dirtymud::Player do
     it 'has a connection' do
       @player.should respond_to(:connection)
     end
+    
+    it 'has items' do
+      @player.items.should be_kind_of(Array)
+    end
 
     describe '#go' do
       it 'makes an announcement on the server' do
@@ -82,6 +86,47 @@ describe Dirtymud::Player do
       it 'sends the player confirmation about what they said' do
         @player1.connection.should_receive(:write).with("You say 'hello'")
         @player1.say('hello')
+      end
+    end
+
+    describe '#get(item)' do
+      before do
+        @server = Dirtymud::Server.new
+        @connection1 = mock(EventMachine::Connection).as_null_object
+        @player1 = @server.player_connected!(@connection1, :name => 'P1')
+        @room = Dirtymud::Room.new(:description => 'Simple room.', :server => @server, :players => [ @player1 ])
+        @player1.room = @room
+      end
+
+      context 'when there is only one possible item match' do
+        it 'takes the item from the room and adds it to the player' do
+          @sword = Dirtymud::Item.new(:name => 'sword')
+          @room.items << @sword
+          @player1.items.should be_empty
+          @player1.get('sword')
+          @player1.items.should include(@sword)
+        end
+      end
+
+      context 'when there are more than one possible item match' do
+        it 'asks the player to be more specific' do
+          @sword1 = Dirtymud::Item.new(:name => 'sword one')
+          @sword2 = Dirtymud::Item.new(:name => 'sword two')
+          @room.items << @sword1
+          @room.items << @sword2
+          @player1.items.should be_empty
+          @player1.connection.should_receive(:write).with("Be more specific. Which did you want to get? 'sword one', 'sword two'")
+          @player1.get('sword')
+          @player1.items.should be_empty
+        end
+      end
+
+      context 'when there are no matches' do
+        it 'tells the player there arent any of that thing here' do
+          @player1.connection.should_receive(:write).with("There's nothing here that looks like 'foo'")
+          @player1.get('foo')
+          @player1.items.should be_empty
+        end
       end
     end
 
