@@ -130,6 +130,53 @@ describe Dirtymud::Player do
       end
     end
 
+    describe '#drop(item)' do
+      before do
+        @server = Dirtymud::Server.new
+        @connection1 = mock(EventMachine::Connection).as_null_object
+        @player1 = @server.player_connected!(@connection1, :name => 'P1')
+        @room = Dirtymud::Room.new(:description => 'Simple room.', :server => @server, :players => [ @player1 ])
+        @player1.room = @room
+      end
+
+      context 'when there is only one possible item match' do
+        it 'takes the item from the player and adds it to the room' do
+          @sword = Dirtymud::Item.new(:name => 'sword')
+          @player1.items << @sword
+
+          @player1.items.should include(@sword)
+          @player1.room.items.should_not include(@sword)
+
+          @player1.drop('sword')
+
+          @player1.items.should_not include(@sword)
+          @player1.room.items.should include(@sword)
+        end
+      end
+
+      context 'when there are more than one possible item match' do
+        it 'asks the player to be more specific' do
+          @sword1 = Dirtymud::Item.new(:name => 'sword one')
+          @sword2 = Dirtymud::Item.new(:name => 'sword two')
+          @player1.items << @sword1
+          @player1.items << @sword2
+          @player1.items.should include(@sword1, @sword2)
+
+          @player1.connection.should_receive(:write).with("Be more specific. Which did you want to drop? 'sword one', 'sword two'")
+
+          @player1.drop('sword')
+          @player1.items.should include(@sword1, @sword2)
+        end
+      end
+
+      context 'when there are no matches' do
+        it 'tells the player there arent any of that thing in their inventoryj' do
+          @player1.connection.should_receive(:write).with("There's nothing in your inventory that looks like 'foo'")
+          @player1.drop('foo')
+        end
+      end
+    end
+
     describe '#inventory' do
       context 'when the player has something in his inventory' do
         it 'sends the player connection the list of items in the inventory' do
@@ -165,6 +212,11 @@ describe Dirtymud::Player do
       it 'handles get' do
         @player.should_receive(:get).with('sword')
         @player.do_command('get sword')
+      end
+
+      it 'handles drop' do
+        @player.should_receive(:drop).with('sword')
+        @player.do_command('drop sword')
       end
 
       it 'handles inventory' do

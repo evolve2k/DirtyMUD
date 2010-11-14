@@ -56,6 +56,29 @@ module Dirtymud
       end
     end
 
+    def drop(item_text)
+      #try to find an item in this room who's name contains the requested item text
+      matches = items.select{|i| i.name =~ /#{item_text}/}
+
+      if matches.length > 0
+        if matches.length == 1
+          item = matches[0]
+
+          #drop the item to the room
+          room.items << item
+          
+          #remove the item from the player
+          items.delete(item)
+        else
+          #ask the player to be more specific
+          send_data("Be more specific. Which did you want to drop? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
+        end
+      else
+        #tell the player there's nothing in their inventory by that name
+        send_data("There's nothing in your inventory that looks like '#{item_text}'")
+      end
+    end
+
     def help
       help_contents = File.read(File.expand_path('../../../world/help.txt', __FILE__))
       send_data(help_contents)
@@ -79,11 +102,13 @@ module Dirtymud
       send_data(str)
     end
 
+
     def do_command(input)
       case input
       when /^[nesw]$/ then go(input)
       when /^say (.+)$/ then say($1)
       when /^get (.+)$/ then get($1)
+      when /^drop (.+)$/ then drop($1)
       when /^(i|inv|inventory)$/ then inventory
       when /^look$/ then look
       when /^help$/ then help
