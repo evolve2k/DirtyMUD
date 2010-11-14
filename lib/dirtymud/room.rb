@@ -42,8 +42,22 @@ module Dirtymud
       str
    end
 
+    def items_str
+      str = ""
+      if items.length > 0
+        str = "Items here:\n"
+        items.each { |i| str << "  - #{i.name}\n" }
+      end
+
+      str
+    end
+
     def look_str(for_player)
-      "#{description}\n#{exits_str}#{players_str(for_player)}"
+      str = ""
+      str << description + "\n"
+      str << exits_str + "\n"
+      str << items_str + "\n"
+      str << players_str(for_player) + "\n"
     end
 
     def inspect

@@ -35,9 +35,14 @@ describe Dirtymud::Room do
     describe '#enter(player)' do
       it 'moves the player into the room' do
         @player.room = @room2
+        @room2.players = [@player]
+        @room.players = []
+
         @room2.leave(@player)
+        @room2.players.should be_empty
         @room.enter(@player)
         @player.room.should == @room
+        @room.players.should include(@player)
       end
 
       it 'announces the player entry to the room' do
@@ -52,6 +57,13 @@ describe Dirtymud::Room do
         @room2.should_receive(:announce).with("#{@player.name} has left the room.", {:except => [@player]})
         @player.room = @room2
         @room2.leave(@player)
+      end
+
+      it 'removes the player from the room' do
+        @player.room = @room2
+        @room2.players = [@player]
+        @room2.leave(@player)
+        @room2.players.should be_empty
       end
     end
 
@@ -80,12 +92,31 @@ describe Dirtymud::Room do
     end
 
     describe '#players_str(for_player)' do
-      it 'returns all the players in the room besides _for_player_' do
-        @room.players = []
-        @room.players << @player
-        @room.players << @player2
-        @room.players << @player3
-        @room.players_str(@player).should include("Alice is here.", "Bob is here")
+      context 'when there is one other player in the room' do
+        it 'shows the other player in the room' do
+          @room.players = []
+          @room.players << @player
+          @room.players << @player2
+          @room.players_str(@player).should == "\nAlice is here."
+        end
+      end
+    end
+
+    describe '#items_str' do
+      context 'when items are in the room' do
+        it 'returns a string of all the items in the room' do
+          @room.items = [ Dirtymud::Item.new(:name => 'a sword') ]
+          @room.items_str.should include('Items here')
+          @room.items_str.should include('a sword')
+        end
+      end
+
+      context 'when there are no items in the room' do
+        it 'does not show Items Here' do
+          @room.items = []
+          @room.items_str.should_not include('Items here')
+          @room.items_str.should_not include('a sword')
+        end
       end
     end
 
