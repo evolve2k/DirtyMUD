@@ -140,6 +140,14 @@ describe Dirtymud::Player do
           @player.do_command(dir)
         end
 
+        #handles look
+        @player.should_receive(:look)
+        @player.do_command('look')
+        
+        #handles get
+        @player.should_receive(:get).with('sword')
+        @player.do_command('get sword')
+
         #handles help
         @player.should_receive(:help)
         @player.do_command('help')

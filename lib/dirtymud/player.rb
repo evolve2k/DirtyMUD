@@ -48,7 +48,7 @@ module Dirtymud
           room.items.delete(item)
         else
           #ask the player to be more specific
-          send_data("Be more specific. Which did you want to get? #{matches.collect{|i| "'#{i.name}', "}.join.chop.chop}")
+          send_data("Be more specific. Which did you want to get? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
         end
       else
         #tell the player there's nothing here by that name
@@ -72,6 +72,7 @@ module Dirtymud
       case input
       when /^[nesw]$/ then go(input)
       when /^say (.+)$/ then say($1)
+      when /^get (.+)$/ then get($1)
       when /^look$/ then look
       when /^help$/ then help
       else help

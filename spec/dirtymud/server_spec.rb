@@ -66,6 +66,27 @@ describe Dirtymud::Server do
       end
     end
 
+    describe '#load_items!' do
+      it 'loads the items into the server global items hash' do
+        sword = { 'id' => 1, 'name' => "a sword"}
+        book = { 'id' => 2, 'name' => "a mysterious book"}
+        ring = { 'id' => 3, 'name' => "a ring with a large ruby on it"}
+        yaml = { 'items' => [
+          sword,
+          book,
+          ring,
+        ] }
+        items_by_id = {1 => sword, 2 => book, 3 => ring}
+        YAML.should_receive(:load_file).with(File.expand_path('../../../world/items.yml', __FILE__)).and_return(yaml)
+        @server.load_items!
+
+        items_by_id.each do |id, item|
+          @server.items[id].name.should == item['name']
+        end
+      end
+    end
+
+
     describe 'loading rooms from a yml file' do
       before :each do
         yaml = { 'world' => { 'starting_room' => 1, 'rooms' => [

@@ -1,0 +1,9 @@
+items:
+  - id: 1
+    name: 'a sword'
+
+  - id: 2
+    name: 'a mysterious book'
+
+  - id: 3
+    name: 'a ring with a large ruby on it'

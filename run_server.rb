@@ -14,21 +14,12 @@ module Dirtymud
     end
 
     def receive_data(data)
-      #echo back to client
-      # send_data ">>> You sent: #{data}"
-      
       $server.input_received!(self, data.chomp)
-
-      #send message to everyone else
-      # World.instance.current_players.values.each do |player|
-      #   player.em_client.send_data("#{@player.name} sent: " + data) #if client.object_id != self.object_id
-      # end
 
       close_connection if data =~ /quit|exit/i
     end
 
     def unbind
-      # World.instance.current_players.delete(@player)
     end
 
     def write(data)
