@@ -24,7 +24,7 @@ module Dirtymud
         # send the new room look to the player
         send_data(new_room.look_str(self))
       else
-        send_data("You can't go that way. #{room.exits.keys.join(' ')}")
+        send_data("You can't go that way. #{room.exits_str}")
       end
     end
 
@@ -111,6 +111,9 @@ module Dirtymud
       send_data(str)
     end
 
+    def emote(action)
+      room.announce("#{name} #{action}")
+    end
 
     def do_command(input)
       case input
@@ -120,6 +123,7 @@ module Dirtymud
       when /^drop (.+)$/ then drop($1)
       when /^(i|inv|inventory)$/ then inventory
       when /^(l|look)$/ then look
+      when /^\/me (.+)$$/ then emote($1)
       when /^help$/ then help
       else help
       end

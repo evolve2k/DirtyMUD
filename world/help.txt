@@ -1,6 +1,28 @@
-Commands:
-- Movement: n, s, e, or w | moves you in that direction. Example: to go North, type 'n' and press <enter>
-- Communicating: say <msg> | talks to people you can see in the same room as you. Example: say hi there
-- Getting Stuff: get <item> / drop <item> | picks up an item from the room or drops an item from your inventory.
-- Inventory: inventory | lists the items in your inventory.
-- Quitting: quit | logs you off
+-------------------------------------------
+
+Movement
+
+  n, s, e, or w | moves you in that direction. Example: to go North, type: 'n' and press <enter>
+
+-------------------------------------------
+
+Communicating
+
+  say <msg>  | talks to people you can see in the same room as you. Example: say hi there
+  /me <text> | emotes that text to people in the room. Example: /me smiles at you.
+
+-------------------------------------------
+
+Items
+
+get <item>  | picks up an item from the room.
+drop <item> | drops an item from your inventory.
+inventory   | lists the items in your inventory.
+
+-------------------------------------------
+
+Misc Commands
+
+quit | logs you off
+
+-------------------------------------------

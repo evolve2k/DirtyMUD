@@ -38,23 +38,33 @@ describe Dirtymud::Player do
     end
 
     describe '#go' do
-      it 'makes an announcement on the server' do
-        @player.room = @room_center
-        @room_n.should_receive(:announce).with("Dirk has entered the room.", :except => [ @player ])
-        @player.go('n')
+      context 'moving in a valid direction' do
+        it 'makes an announcement on the server' do
+          @player.room = @room_center
+          @room_n.should_receive(:announce).with("Dirk has entered the room.", :except => [ @player ])
+          @player.go('n')
+        end
+
+        it 'moves the player to the new room' do
+          @player.room = @room_center
+          @player.go('n')
+          @player.room.should == @room_n
+          @room_n.players.should include(@player)
+        end
+
+        it 'tells the player about the new room' do
+          @player.room = @room_center
+          @player.connection.should_receive(:write).with(@room_n.look_str(@player))
+          @player.go('n')
+        end
       end
 
-      it 'moves the player to the new room' do
-        @player.room = @room_center
-        @player.go('n')
-        @player.room.should == @room_n
-        @room_n.players.should include(@player)
-      end
-
-      it 'tells the player about the new room' do
-        @player.room = @room_center
-        @player.connection.should_receive(:write).with(@room_n.look_str(@player))
-        @player.go('n')
+      context 'moving in an invalid direction' do
+        it "tells you that you can't go that way" do
+          @player.room = @room_n
+          @player.connection.should_receive(:write).with("You can't go that way. [Exits: S]")
+          @player.go('n')
+        end
       end
     end
 
@@ -198,6 +208,24 @@ describe Dirtymud::Player do
       end
     end
 
+    describe '#emote' do
+      it 'sends the emote to everyone in the room' do
+        @server = Dirtymud::Server.new
+        @connection1 = mock(EventMachine::Connection).as_null_object
+        @connection2 = mock(EventMachine::Connection).as_null_object
+        @player1 = @server.player_connected!(@connection1, :name => 'P1')
+        @player2 = @server.player_connected!(@connection2, :name => 'P2')
+        @room = Dirtymud::Room.new(:description => 'Simple room.', :server => @server, :players => [ @player1, @player2 ])
+        @player1.room = @room
+        @player2.room = @room
+
+        @player1.connection.should_recieve(:write).with('P1 smiles at you')
+        @player2.connection.should_recieve(:write).with('P1 smiles at you')
+
+        @player1.emote('smiles at you')
+      end
+    end
+
     describe '#do_command' do
       it 'handles commands for the cardinal directions' do
         dirs = %w(n e s w)
@@ -212,6 +240,11 @@ describe Dirtymud::Player do
         @player.should_receive(:look).exactly(2).times
         @player.do_command('look')
         @player.do_command('l')
+      end
+      
+      it 'handles /me' do
+        @player.should_receive(:emote).with('smiles at you')
+        @player.do_command('/me smiles at you')
       end
 
       it 'handles get' do
