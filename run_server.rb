@@ -33,6 +33,6 @@ $server = Dirtymud::Server.new
 puts "Server running on 127.0.0.1 4000"
 
 EventMachine::run {
-  EventMachine::start_server "127.0.0.1", 4000, Dirtymud::EventMachineServer
+  EventMachine::start_server "0.0.0.0", 4000, Dirtymud::EventMachineServer
 }
 

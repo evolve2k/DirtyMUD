@@ -98,9 +98,6 @@ module Dirtymud
 
     def look
       send_data(room.look_str(self))
-      room.players.reject{|p| p == self}.each do |p|
-        send_data("#{p.name} is here.")
-      end
     end
 
     def inventory
