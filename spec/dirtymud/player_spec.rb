@@ -209,8 +209,9 @@ describe Dirtymud::Player do
       end
 
       it 'handles look' do
-        @player.should_receive(:look)
+        @player.should_receive(:look).exactly(2).times
         @player.do_command('look')
+        @player.do_command('l')
       end
 
       it 'handles get' do

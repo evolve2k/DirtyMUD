@@ -119,7 +119,7 @@ module Dirtymud
       when /^get (.+)$/ then get($1)
       when /^drop (.+)$/ then drop($1)
       when /^(i|inv|inventory)$/ then inventory
-      when /^look$/ then look
+      when /^(l|look)$/ then look
       when /^help$/ then help
       else help
       end
