@@ -1,20 +1,10 @@
-Bugs
-- look shows other players twice?
-- add 'you get x' when you get something
-
 Short Term
   - Prompts
   - Ticks
+  
 
 Cool Shit To Prioritize
-  - Player inventories -half done, just need inventory command to list it
   - Player health
   - Monsters
   - Player vs Monster combat!
-
   - Add player#tell <player> <txt> command to send a private msg player to player
-
-DONE
-  [x] Let players pick their name on connect
-  [x] Look command
-  [x] Objects in-world that players can pick up
