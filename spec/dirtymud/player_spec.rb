@@ -37,6 +37,10 @@ describe Dirtymud::Player do
       @player.items.should be_kind_of(Array)
     end
 
+    it 'has health' do
+      @player.should respond_to(:health)
+    end
+
     describe '#go' do
       context 'moving in a valid direction' do
         it 'makes an announcement on the server' do

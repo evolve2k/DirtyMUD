@@ -1,6 +1,7 @@
 module Dirtymud
   class Player
     attr_accessor :name, :room, :connection, :items
+    attr_accessor :name, :health, :room, :connection, :items
 
     def initialize(attrs)
       @items = []
