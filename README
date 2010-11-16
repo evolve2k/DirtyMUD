@@ -1,0 +1,9 @@
+DirtyMUD was hacked together at RailsCamp Perth 2010.  It's not super awesome yet, and might not ever be.  But, I played a lot of MUDs back in high school and hacking on DirtyMUD was a fun diversion for the weekend.  Who knows, someday, it might get more development love.
+
+Running the server: ruby run_server.rb
+Connecting: telnet localhost 4000
+
+Building the world: edit world/rooms.yml
+Adding items: edit world/items.yml
+
+Enjoy!
