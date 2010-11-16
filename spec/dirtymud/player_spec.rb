@@ -41,6 +41,10 @@ describe Dirtymud::Player do
       @player.should respond_to(:health)
     end
 
+    it "starts with 100 health" do
+      @player.health.should == 100
+    end
+
     describe '#go' do
       context 'moving in a valid direction' do
         it 'makes an announcement on the server' do

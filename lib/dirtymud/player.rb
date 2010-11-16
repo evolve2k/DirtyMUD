@@ -4,6 +4,7 @@ module Dirtymud
     attr_accessor :name, :health, :room, :connection, :items
 
     def initialize(attrs)
+      self.health = 100
       @items = []
       attrs.each do |k, v| 
         self.send("#{k}=", v)
