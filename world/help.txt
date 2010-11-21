@@ -11,6 +11,7 @@ get <item>  | picks up an item from the room.
 get <item>  | picks up an item from the room. (Can also use 'take' and 'pick up')
 drop <item> | drops an item from your inventory.
 inventory   | lists the items in your inventory.
+inventory   | lists the items in your inventory. (Can also say 'items')
 -------------------------------------------
 Status
 status | current status including health.

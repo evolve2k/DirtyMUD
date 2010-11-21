@@ -134,6 +134,7 @@ module Dirtymud
         when /^take (.+)$/ then get($1)
         when /^pick up (.+)$/ then get($1)
         when /^pickup (.+)$/ then get($1)
+        when /^(items)$/ then inventory
       else help
       end
     end

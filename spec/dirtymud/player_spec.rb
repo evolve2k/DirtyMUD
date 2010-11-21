@@ -288,6 +288,11 @@ describe Dirtymud::Player do
         @player.do_command('inv')
         @player.do_command('i')
       end
+      
+      it 'handles items (same as inventory)' do
+        @player.should_receive(:inventory)
+        @player.do_command('items')
+      end
 
       it 'handles help' do
         #handles help
