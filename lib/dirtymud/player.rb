@@ -1,6 +1,5 @@
 module Dirtymud
   class Player
-    attr_accessor :name, :room, :connection, :items
     attr_accessor :name, :health, :room, :connection, :items
 
     def initialize(attrs)
@@ -33,6 +32,10 @@ module Dirtymud
     def say(message)
       room.announce("#{name} says '#{message}'", :except => [self])
       send_data("You say '#{message}'")
+    end
+
+    def status
+      send_data("Health: #{self.health}")
     end
 
     def get(item_text)
@@ -127,6 +130,7 @@ module Dirtymud
       when /^(l|look)$/ then look
       when /^\/me (.+)$$/ then emote($1)
       when /^help$/ then help
+      when /^status$/ then status
       else help
       end
     end

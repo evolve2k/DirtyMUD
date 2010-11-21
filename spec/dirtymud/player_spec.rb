@@ -24,7 +24,7 @@ describe Dirtymud::Player do
     it 'has a name' do
       @player.name.should == 'Dirk'
     end
-
+    
     it 'has a room' do
       @player.room.should == @room1
     end
@@ -278,6 +278,14 @@ describe Dirtymud::Player do
         @player.should_receive(:help)
         @player.do_command('help')
       end
+      
+      it 'handles status' do
+        #handles status: health, XP, magic, etc and other stats
+        @player.should_receive(:status)
+        @player.do_command('status')
+      end
+
+      
     end
 
 
@@ -301,6 +309,18 @@ describe Dirtymud::Player do
       it "delegates to the player connection object" do
         @player.connection.should_receive(:write).with('foo')
         @player.send_data('foo')
+      end
+    end
+        
+    describe '#status' do
+      it "should exist" do
+        @player.should respond_to(:status)
+      end
+      it "should show the current health of the player on screen" do
+        current_health = 60      
+        @player.health = current_health
+        @player.connection.should_receive(:write).with("Health: #{current_health}")
+        @player.status
       end
     end
   end
