@@ -260,6 +260,22 @@ describe Dirtymud::Player do
         @player.do_command('get sword')
       end
 
+      
+      it 'handles take (same as get)' do
+        @player.should_receive(:get).with('sword')
+        @player.do_command('take sword')
+      end
+      
+      it 'handles pick up (same as get)' do
+        @player.should_receive(:get).with('sword')
+        @player.do_command('pick up sword')
+      end
+      
+      it 'handles pickup (same as get)' do
+        @player.should_receive(:get).with('sword')
+        @player.do_command('pick up sword')
+      end
+      
       it 'handles drop' do
         @player.should_receive(:drop).with('sword')
         @player.do_command('drop sword')

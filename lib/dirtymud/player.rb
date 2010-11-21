@@ -131,6 +131,9 @@ module Dirtymud
       when /^\/me (.+)$$/ then emote($1)
       when /^help$/ then help
       when /^status$/ then status
+        when /^take (.+)$/ then get($1)
+        when /^pick up (.+)$/ then get($1)
+        when /^pickup (.+)$/ then get($1)
       else help
       end
     end
